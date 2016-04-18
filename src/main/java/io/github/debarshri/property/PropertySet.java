@@ -3,14 +3,16 @@ package io.github.debarshri.property;
 import io.github.debarshri.Resource;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.filefilter.NameFileFilter;
 
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
 import java.io.File;
-import java.io.FilenameFilter;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class PropertySet implements Route {
 
@@ -21,20 +23,26 @@ public class PropertySet implements Route {
 
         File file = new File(Resource.LOCATION);
 
-        String configuration = FileUtils.readFileToString(new File(String.format("%s/%s.yaml",
-                Resource.LOCATION, propertySetName)));
+        File[] files1 = file.listFiles();
+
+        List<File> collect = Arrays.asList(files1).stream().filter(file2 -> file2.getName().contains(propertySetName)).collect(Collectors.toList());
+
+        String configuration;
+
+        if(collect.size() > 1)
+        {
+            File file1 = collect.stream().filter(filer -> FilenameUtils.getExtension(filer.getName()).equalsIgnoreCase("Properties")).findFirst().get();
+            configuration = FileUtils.readFileToString(file1);
+        }
+        else
+        {
+            configuration = FileUtils.readFileToString(collect.get(0));
+        }
 
         if(as != null)
         {
 
             File[] files = file.listFiles();
-
-            File prop;
-
-            for(File file1 : files)
-            {
-                //todo
-            }
 
             if(files.length == 0)
             {

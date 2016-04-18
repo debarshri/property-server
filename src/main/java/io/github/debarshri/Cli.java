@@ -8,5 +8,5 @@ public interface Cli {
     int getPort();
 
     @Option
-    String getResourceLocation();
+    String getRepo();
 }
