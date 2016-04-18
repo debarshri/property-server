@@ -13,8 +13,13 @@ public class ServerMain {
         Spark.port(cli.getPort());
         Resource.LOCATION = cli.getResourceLocation();
 
-        Spark.get("/status", (req, res) -> "Working...");
+        Spark.get("/status", (req, res) -> "ok");
+        Spark.get("/", (req, res) -> "<pre>PropServe Doc\n\n" +
+                "/get/{property-name}\n" +
+                "/get/{property-name}?as={format}\n" +
+                "/get/{property-name}/field/{fieldName}</pre>\n");
+
         Spark.get("/get/:propertySetName", new PropertySet());
-        Spark.get("/get/:propertySetName/property/:propertyName", new NProperty());
+        Spark.get("/get/:propertySetName/field/:propertyName", new NProperty());
     }
 }
