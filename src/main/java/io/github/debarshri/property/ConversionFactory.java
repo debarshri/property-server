@@ -1,5 +1,6 @@
 package io.github.debarshri.property;
 
+import io.github.debarshri.Extensions;
 import org.json.JSONObject;
 import org.yaml.snakeyaml.Yaml;
 
@@ -10,25 +11,33 @@ import java.util.Set;
 public class ConversionFactory {
     public static <T> T fromTo(String configuration, String extension, String as) {
 
-        if(as.toUpperCase().equals(extension))
+        if(as.equalsIgnoreCase(extension))
         {
             return (T)configuration;
         }
-        else if(as.toUpperCase().equals("JSON"))
+        else if(as.equalsIgnoreCase(Extensions.JSON) && extension.equalsIgnoreCase(Extensions.YAML))
         {
             Yaml yaml = new Yaml();
             Map<String,Object> map= (Map<String, Object>) yaml.load(configuration);
 
             JSONObject jsonObject=new JSONObject(map);
             return (T)jsonObject.toString();
-        } else if(as.toUpperCase().equals("java"))
+        }
+        else if(as.equalsIgnoreCase(Extensions.JSON) && extension.equalsIgnoreCase(Extensions.PROPERTIES))
+        {
+            Yaml yaml = new Yaml();
+            Map<String,Object> map= (Map<String, Object>) yaml.load(configuration);
+            JSONObject jsonObject=new JSONObject(map);
+            return (T)jsonObject.toString();
+        }
+        else if(as.toUpperCase().equals("java"))
         {
             Yaml yaml = new Yaml();
             Map<String,Object> map= (Map<String, Object>) yaml.load(configuration);
             return (T)mapToProperties(map);
         }
 
-        return null;
+        return (T)"Property mapping does not exist";
     }
 
     public static Properties mapToProperties(Map<String, Object> map) {
