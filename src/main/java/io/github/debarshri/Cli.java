@@ -9,4 +9,9 @@ public interface Cli {
 
     @Option
     String getRepo();
+
+    /**
+    @Option
+    String getToken();
+    **/
 }

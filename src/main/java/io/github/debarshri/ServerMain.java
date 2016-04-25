@@ -2,19 +2,19 @@ package io.github.debarshri;
 
 import com.lexicalscope.jewel.cli.CliFactory;
 import io.github.debarshri.property.*;
+import spark.Spark;
 
 import static spark.Spark.*;
 
 public class ServerMain {
     public static void main(String[] args) {
 
-        if(args.length != 0 )
-        {
+        if (args.length != 0) {
             Cli cli = CliFactory.parseArguments(Cli.class, args);
             port(cli.getPort());
             Resource.LOCATION = cli.getRepo();
-        }
-        else {
+           // Resource.TOKEN = cli.getToken();
+        } else {
             Resource.LOCATION = "repo";
         }
 
@@ -32,6 +32,18 @@ public class ServerMain {
         post("/v1/add/:propertyName/field/:fieldName/value", new AddValue());
         get("/v1/property/:propertyName/search/:fieldName", new Search());
 
-        //todo search
+        //TODO needs testing
+        /**
+        Spark.before("/v1/*",(request, response) -> {
+            if(!Resource.TOKEN.isEmpty())
+            {
+                String token = request.queryParams("token");
+                if(token == null || TokenFactory.validate(token))
+                {
+                    halt(403);
+                }
+            }
+        });
+         **/
     }
 }
